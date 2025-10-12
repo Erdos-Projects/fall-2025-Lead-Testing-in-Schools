@@ -1,3 +1,13 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:57625596d985401a27c8a33535f197659978ae4bb7398b4e78d1b394982090bc
-size 190
+name: erdos_project
+channels:
+  - conda-forge
+dependencies:
+  - bs4
+  - jupyter
+  - numpy
+  - pandas >= 2.0
+  - pip >= 24.0
+  - python = 3.12
+  - requests
+  - pip:
+      - simple-ddl-parser

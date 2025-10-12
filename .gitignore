@@ -1,3 +1,3 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:65abeccd48ae2c763c9208cbfcef09405a34b62aaa3ef6b26365f57a7d622958
-size 193
+__pycache__
+.mamba
+.direnv
