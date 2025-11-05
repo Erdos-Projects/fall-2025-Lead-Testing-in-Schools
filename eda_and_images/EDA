@@ -1,0 +1,272 @@
+#Import Libraries and Data Cleaning
+
+import os
+import pandas as pd
+import re
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import missingno as msno
+
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.impute import SimpleImputer
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score
+from sklearn.inspection import permutation_importance
+
+sns.set(style="whitegrid")
+
+from sklearn.metrics import accuracy_score,f1_score, confusion_matrix, precision_score, recall_score, roc_auc_score
+
+df = pd.read_csv("Lead_school.csv")
+df.columns = df.columns.str.replace('\xa0', ' ').str.strip()
+df.columns
+
+os.listdir('.')
+
+df_copied = df.copy()
+
+df_copied.columns = df_copied.columns.str.replace('\xa0', ' ', regex=False)
+
+
+col_to_drop = ['School Street','Cleaned_school_name','PS_No','Location','Remediation Status',
+               'Type of Organization','Compliance Period','School Website','Date Survey Updated','BEDS Code',
+               'County Location','All Results Received','Out of Service or Addressed',
+               'School State','Number of Outlets that Require Sampling','Number of Outlets Sampled 2023',
+               'Number of Outlets Sampled 2024','Number of Outlets Sampled 2025', 'Sampling Complete','School ZIP Code','Free_lunch','Total_students']
+
+df_copied.drop(columns=col_to_drop,inplace=True)
+
+df_copied = df_copied.rename(columns={'Number of Outlets, Result ≤ 5 ppb' : 'num_lte_5ppb', 'Number of Outlets, Result > 5 ppb': 'num_gt_5ppb'})
+
+df_copied.columns = df_copied.columns.str.replace(' ', '_').str.strip()
+
+df_copied.columns
+
+### Comment
+
+Some of the entries in 'Number of Outlets, Result ≤ 5 ppb' are negative. So, we set those rows to be NaN and also set the corresponding entries in 'Number of Outlets, Result > 5 ppb' to be  NaN
+
+mask = df_copied['num_lte_5ppb'] < 0
+df_copied.loc[mask,['num_lte_5ppb','num_gt_5ppb']]= np.nan
+
+df_copied.describe()
+
+msno.matrix(df_copied)
+plt.show()
+
+missing_data = df_copied.isna().mean().sort_values(ascending=False)*100
+
+missing_data
+
+#  Correlation across Variables
+
+numeric_cols = df_copied.select_dtypes(include=[np.number]).columns
+categorical_cols = df_copied.select_dtypes(include=['object', 'category']).columns
+
+
+plt.Figure(figsize=(7,5))
+corr = df_copied[numeric_cols].corr()
+sns.heatmap(corr, annot=True, fmt=".2f", cmap='coolwarm')
+plt.title("Correlation Matrix (Numeric Variables)")
+plt.show()
+
+We see that  there is strong negative correlation between 'White' and 'Ratio_free' , 'White' and 'Hispanic'. Hence we calculate Variance Inflation Factor (VIF) to check multicollinearity
+
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+
+
+X_subset = df_copied[['White', 'Ratio_free', 'Hispanic']].dropna()
+
+vif_data = pd.DataFrame()
+vif_data['feature'] = X_subset.columns
+vif_data['VIF'] = [variance_inflation_factor(X_subset.values, i) for i in range(X_subset.shape[1])]
+
+print(vif_data)
+
+
+### Adding a new column to the dataframe
+
+
+We note that the number of outlets having lead > 5 ppb is highly skewed. Hence, we have decided to make a model which can tell whether a given school will have an outlet with lead > 5 ppb based uon the feature columns - a classification problem. Therefore, we add a new column 'target_col' which is 1 if the school has atleast 1 outlet which had lead > 5 ppb or else 0
+
+sns.histplot(df_copied['num_gt_5ppb'], bins=30, kde=False)
+plt.xlabel('Number of Outlets > 5 ppb')
+plt.ylabel('Number of Schools')
+plt.title('Distribution of Lead-Contaminated Outlets per School')
+plt.show()
+
+df_copied['target_col'] = (df_copied['num_gt_5ppb']>0).astype(int)
+
+corr_target_var = df_copied[numeric_cols].corrwith(df_copied['target_col']).sort_values(key=abs, ascending=False)
+corr_target_var
+
+### Balanced or Imbalanced
+We see that the target variable is relatively balanced
+
+sns.countplot(x='target_col', data=df_copied)
+plt.title('Presence of Lead > 5ppb')
+plt.show()
+
+
+sns.pairplot(df_copied,x_vars=numeric_cols,y_vars=['num_gt_5ppb'], height=4)
+plt.show()
+
+# Identify Important Features
+
+### Box plot
+We note that the median values for Ratio_free and Whites are well separated. For other features, there are a lot of outliers
+
+for col in numeric_cols:
+    if col != 'num_gt_5ppb':
+        plt.figure(figsize=(6,4))
+        sns.boxplot(x='target_col', y=col, data=df_copied)
+        plt.show()
+
+
+for col in numeric_cols:
+    if col != 'num_gt_5ppb':  # skip target count
+        plt.figure(figsize=(8,4))
+        sns.kdeplot(data=df_copied, x=col, hue='target_col', common_norm=False)
+        plt.show()
+
+
+df_copied.info()
+
+df_copied.to_csv('Lead_eda.csv',index=False)
+
+plt.figure(figsize=(10, 6))
+sns.countplot(data=df_copied, x='County', order=df_copied['County'].value_counts().index)
+
+plt.xlabel('County')
+plt.ylabel('Number of Entries')
+plt.title('Number of Entries per County')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+df_copied.School_City.value_counts()
+
+df_copied.School_District.value_counts()
+
+df_copied.County.value_counts()
+
+#  Percentage (%) of Schools with Lead Over 5ppb, by County
+
+# Add a column to indicate if a school has lead exceedance
+df['Has_Lead_Exceedance'] = df['Number of Outlets, Result > 5 ppb'] > 0
+
+# Group by County and calculate the proportion of schools with lead exceedance
+county_summary = df.groupby('County')['Has_Lead_Exceedance'].value_counts(normalize=True).unstack().fillna(0)
+
+# Rename columns for clarity
+county_summary.columns = ['Proportion_No_Exceedance', 'Proportion_Exceedance']
+
+# Sort by the proportion of schools with exceedance in descending order
+county_summary = county_summary.sort_values('Proportion_Exceedance', ascending=False)
+
+plt.figure(figsize=(15, 7))
+sns.barplot(x=county_summary.index, y=county_summary['Proportion_Exceedance'], palette='viridis')
+plt.title('Percentage of Schools with Lead Exceedance by County')
+plt.xlabel('County')
+plt.ylabel('Percentage of Schools with Exceedance')
+plt.xticks(rotation=90)
+plt.tight_layout()
+plt.show()
+
+# Add a column to indicate if a school has lead exceedance
+df['Has_Lead_Exceedance'] = df['Number of Outlets, Result > 5 ppb'] > 0
+
+# Group by County and calculate the proportion of schools with lead exceedance
+county_summary = df.groupby('County')['Has_Lead_Exceedance'].value_counts(normalize=True).unstack().fillna(0)
+
+# Rename columns for clarity
+county_summary.columns = ['Proportion_No_Exceedance', 'Proportion_Exceedance']
+
+# Sort by the proportion of schools with exceedance in descending order
+county_summary = county_summary.sort_values('Proportion_Exceedance', ascending=False)
+
+# Demographics of Erie County
+
+# Filter the dataframe for schools in Erie County
+erie_county_schools = df[df['County'] == 'Erie'].copy()
+
+# Select the racial/ethnic percentage columns
+racial_ethnic_cols = [
+    'American Indian/Alaska Native', 'Asian', 'Black', 'Hispanic', 'White',
+    'Native Hawaiian/Pacific Islander', 'Two or More Races'
+]
+
+# Melt the dataframe to a long format for plotting
+erie_county_melted = erie_county_schools.melt(
+    id_vars='School',
+    value_vars=racial_ethnic_cols,
+    var_name='Race/Ethnicity',
+    value_name='Percentage'
+)
+
+# Create the stacked bar chart
+plt.figure(figsize=(15, 8))
+sns.barplot(
+    data=erie_county_melted,
+    x='School',
+    y='Percentage',
+    hue='Race/Ethnicity',
+    palette='tab10',
+    dodge=False # This creates the stacked effect
+)
+
+plt.title('Racial and Ethnic Composition of Schools in Erie County')
+plt.xlabel('School')
+plt.ylabel('Percentage of Students')
+plt.xticks(rotation=90)
+plt.legend(title='Race/Ethnicity', bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.tight_layout()
+plt.show()
+
+
+
+# Correlation between Race and Excedance of Lead Over 5ppb
+
+# Select racial/ethnic columns and the County column
+racial_ethnic_cols = [
+    'County',
+    'American Indian/Alaska Native', 'Asian', 'Black', 'Hispanic', 'White',
+    'Native Hawaiian/Pacific Islander', 'Two or More Races'
+]
+df_racial_county = df[racial_ethnic_cols]
+
+# Calculate the average racial/ethnic percentage per county
+average_racial_per_county = df_racial_county.groupby('County')[racial_ethnic_cols[1:]].mean().reset_index()
+
+# Merge with the county_summary dataframe
+county_correlation_data = pd.merge(county_summary, average_racial_per_county, on='County', how='left')
+
+# Calculate the correlation matrix, excluding the non-numeric 'County' column
+correlation_matrix = county_correlation_data.drop('County', axis=1).corr()
+
+# Display the correlations of 'Proportion_Exceedance' with racial/ethnic columns
+display(correlation_matrix[['Proportion_Exceedance']].drop('Proportion_Exceedance'))
+
+#  Top 10 Counties with Lead Exceedance
+
+# Group by County and calculate the proportion of schools with lead exceedance
+county_exceedance_summary = df.groupby('County')['Has_Lead_Exceedance'].value_counts(normalize=True).unstack().fillna(0)
+
+# Rename columns for clarity
+county_exceedance_summary.columns = ['Proportion_No_Exceedance', 'Proportion_With_Exceedance']
+
+# Sort by the proportion of schools with exceedance in descending order
+county_exceedance_summary = county_exceedance_summary.sort_values('Proportion_With_Exceedance', ascending=False)
+
+# Select the top 10 counties with the highest proportion of schools with lead exceedance
+top_counties = county_exceedance_summary.head(10).index.tolist()
+
+# Filter the original dataframe to include only schools in the top counties
+top_counties_df = df[df['County'].isin(top_counties)].copy()
+
+# Display the first few rows of the filtered dataframe to see the data
+display(top_counties_df.head())
