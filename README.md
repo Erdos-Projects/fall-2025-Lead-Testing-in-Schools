@@ -27,9 +27,11 @@ The dataset was split into training and testing sets, with 20% of the data set a
     -   (c) the proportion of Hispanic students 
     -   (d) a city location of Staten Island 
     -   (e) a city location of Brooklyn. 
-![feature_importance](model_comparison/final-modelpermutation_importance.png)
+![feature_importance](model_comparison/final_modelpermutation_importance.png)
 Based on EDA, we had expected geographical features to appear as important predictors (see the county-wide heat map displaying the proportion of schools with target variable 
 ![county-wide heat map](eda_and_images/county_map.png)
+<img src="eda_and_images/county_map.png" alt="county-wide heat map" width="400"/>
+
 
 ## Conclusion and future directions
 1. Geographical features (school district and city) are strong predictors of whether or not a school has lead-contaminated water. In further work, we would explore other features capturing why location plays a critical role in lead detection.
