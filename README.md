@@ -40,7 +40,8 @@ The dataset was split into training and testing sets, with 20% of the data set a
     -   (e) a city location of Brooklyn. 
 <img src="model_comparison/final_modelpermutation_importance.png" alt="feature importance" width="500" height="500"/>
 
-Based on EDA, we had expected geographical features to appear as important predictors (see the county-wide heat map displaying the proportion of schools with target variable 
+Based on EDA, we had expected geographical features to appear as important predictors consistentwith the county-wide heat map displaying the proportion of schools with target variable.
+
 <img src="eda_and_images/county_map.png" alt="county-wide heat map" width="500" height="500"/>
 
 ## Conclusion and future directions
@@ -50,6 +51,6 @@ Based on EDA, we had expected geographical features to appear as important predi
 4. Finally, lead contamination in school drinking water is not a problem limited to New York State. In future work, we would look to expand modeling to include other states. 
 
 ## Folder organization
-1. data : This folder contains the main dataset "Lead_Testing_in_Schools.csv" obtained from [New York department of health website(https://health.data.ny.gov/Health/Lead-Testing-in-School-Drinking-Water-Sampling-and/rygk-rhum/about_data). It also contains a script "scraping_all_schools.ipynb" to scrap socio-economic and demographics data from [nces website](https://nces.ed.gov/ccd/schoolsearch/ ) and other datasets obtained from [NYC government site](https://a816-dohbesp.nyc.gov/IndicatorPublic/data-explorer/lead/?id=16#display=summary). The final dataset used for modeling is "lead_data_expanded.csv" which can be generated using "combine_csv.ipynb"
+1. data : This folder contains the main dataset "Lead_Testing_in_Schools.csv" obtained from [New York department of health website](https://health.data.ny.gov/Health/Lead-Testing-in-School-Drinking-Water-Sampling-and/rygk-rhum/about_data). It also contains a script "scraping_all_schools.ipynb" to scrap socio-economic and demographics data from [nces website](https://nces.ed.gov/ccd/schoolsearch/ ) and other datasets obtained from [NYC government site](https://a816-dohbesp.nyc.gov/IndicatorPublic/data-explorer/lead/?id=16#display=summary). The final dataset used for modeling is "lead_data_expanded.csv" which can be generated using "combine_csv.ipynb"
 2. eda_and_images : This folder conains python notebooks to perform exploratory data analysis on the data.
 3. model_comparison : This folder contains scripts for performing model evaluation and testing the final model. It also contains the executive summary and rpesentation pdfs.
