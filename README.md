@@ -20,17 +20,17 @@ The dataset was split into training and testing sets, with 20% of the data set a
 ## Results
 1. Hyperparameter-tuned logistic regression model produced the best mean AUC score in the training stage, with an average ROC-AUC score of 0.7621 across the five outer folds of the nested cross-validation.
 2. On the final test set we obtained an ROC-AUC score of 0.7278 on the validation set using the Logistic Regression with penalty and the best hyperparameters found in the training stage. The corresponding confusion matrix is shown below :
-![county-wide heat map](model_comparison/final_model_cm.png)
+<img src="model_comparison/final_model_cm.png" alt="confusion matrix final" width="500" height="500"/>
 4. Feature importance analysis based on permutation importance methods indicates that the most important features of a school were: 
     -   (a) school district of NYC Department of Education
     -   (b) the proportion of white students 
     -   (c) the proportion of Hispanic students 
     -   (d) a city location of Staten Island 
     -   (e) a city location of Brooklyn. 
-![feature_importance](model_comparison/final_modelpermutation_importance.png)
+<img src="model_comparison/final_modelpermutation_importance.png" alt="feature importance" width="500" height="500"/>
+
 Based on EDA, we had expected geographical features to appear as important predictors (see the county-wide heat map displaying the proportion of schools with target variable 
-![county-wide heat map](eda_and_images/county_map.png)
-<img src="eda_and_images/county_map.png" alt="county-wide heat map" width="400"/>
+<img src="eda_and_images/county_map.png" alt="county-wide heat map" width="500" height="500"/>
 
 
 ## Conclusion and future directions
