@@ -4,7 +4,7 @@ Project completed for Erdos institute data science bootcamp (fall-2025)
 
 ### Team members
 1. Cami Goray
-2. Hana Lang
+2. Hana Lang [https://github.com/hlang-3304]
 3. Ranadeep Roy
 
 
