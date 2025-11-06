@@ -22,7 +22,7 @@ Our primary stakeholders are education administrators in the State of New York, 
 ## Dataset
 
 1. We obtained our primary dataset from New York’s Department of Health. Our target variable is a binary: 1 if there is a drinking outlet with above five parts per billion (>5 ppb) lead contamination, and 0 if there are no such drinking outlets. This level is recommended by the New York Public Health Law, which governs school potable water testing standards.
-2. Our predictive features include school name, school district, percentage of students on free or reduced lunch, student-teacher ratio, demographic enrollment percentages (White, Black, Hispanic, Native American, Multiple Races) per school, and percentage of buildings in each county built before 1950, since building materials pre-1950 were more likely to contain lead in plumbing and paint materials. We obtained this data by scrapping [nces website](https://nces.ed.gov/ccd/schoolsearch/)
+2. Our predictive features include school name, school district, percentage of students on free or reduced lunch, student-teacher ratio, demographic enrollment percentages (White, Black, Hispanic, Native American, Multiple Races) per school, and percentage of buildings in each county built before 1950, since building materials pre-1950 were more likely to contain lead in plumbing and paint materials. We obtained this data by scraping [nces website](https://nces.ed.gov/ccd/schoolsearch/)
 
 
 ## Modeling approach
