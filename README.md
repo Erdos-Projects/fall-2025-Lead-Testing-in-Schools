@@ -15,12 +15,13 @@ We developed a comprehensive analysis to predict the presence of lead contaminat
 Our primary stakeholders are education administrators in the State of New York, as well as the NY State Department of Health, New York Schools, and NY parents and families of schoolchildren, as this project aims to predict lead contamination and therefore improve safety of school facilities. 
 
 ## Modeling approach
-That dataset was split into training and testing sets, with 20% of the data set aside as the final test set. For each model, we performed hyperparameter tuning with nested cross validation using random search. Models were considered in increasing order of complexity: logistic regression (with and without penalty), decision trees, support vector machines, random forest, AdaBoost and XGBoost. All the models were evaluated on the basis of mean ROC-AUC scores. This metric was chosen because our dataset was nearly balanced and we wanted to ensure that our model can distinguish between the two classes well.
+The dataset was split into training and testing sets, with 20% of the data set aside as the final test set. For each model, we performed hyperparameter tuning with nested cross validation using random search. Models were considered in increasing order of complexity: logistic regression (with and without penalty), decision trees, support vector machines, random forest, AdaBoost and XGBoost. All the models were evaluated on the basis of mean ROC-AUC scores. This metric was chosen because our dataset was nearly balanced and we wanted to ensure that our model can distinguish between the two classes well.
 
 ## Results
 1. Hyperparameter-tuned logistic regression model produced the best mean AUC score in the training stage, with an average ROC-AUC score of 0.7621 across the five outer folds of the nested cross-validation.
-2. On the final test set we obtained an ROC-AUC score of 0.7278 on the validation set using the Logistic Regression with penalty and the best hyperparameters found in the training stage. 
-3. Feature importance analysis based on permutation importance methods indicates that the most important features of a school were: 
+2. On the final test set we obtained an ROC-AUC score of 0.7278 on the validation set using the Logistic Regression with penalty and the best hyperparameters found in the training stage.
+![county-wide heat map](model_comparison/final_model.png)
+4. Feature importance analysis based on permutation importance methods indicates that the most important features of a school were: 
     -   (a) school district of NYC Department of Education
     -   (b) the proportion of white students 
     -   (c) the proportion of Hispanic students 
@@ -29,7 +30,7 @@ That dataset was split into training and testing sets, with 20% of the data set 
 
 Based on EDA, we had expected geographical features to appear as important predictors (see the county-wide heat map displaying the proportion of schools with target variable 
 
-![county-wide heat map] ()
+![county-wide heat map](eda_and_images/county_map.png)
 
 ## Conclusion and future directions
 1. Geographical features (school district and city) are strong predictors of whether or not a school has lead-contaminated water. In further work, we would explore other features capturing why location plays a critical role in lead detection.
