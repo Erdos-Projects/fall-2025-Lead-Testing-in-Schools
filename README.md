@@ -14,10 +14,10 @@ We developed a comprehensive analysis to predict the presence of lead contaminat
 ## Modeling approach
 
 ## Results
-1.Hyperparameter-tuned logistic regression model produced the best mean AUC score in the training stage, with an average ROC-AUC score of 0.7621 across the five outer folds of the nested cross-validation.
+1. Hyperparameter-tuned logistic regression model produced the best mean AUC score in the training stage, with an average ROC-AUC score of 0.7621 across the five outer folds of the nested cross-validation.
 2. On the final test-set we obtained an ROC-AUC score of 0.7278 on the validation set using the Logistic Regression with penalty and the best hyperparameters found in the training stage. 
 3. Feature importance analysis based on permutation importance methods indicates that the most important features of a school were: 
-    (a)school district of NYC Department of Education
+    (a) school district of NYC Department of Education
     (b) the proportion of white students 
     (c) the proportion of Hispanic students 
     (d) a city location of Staten Island 
