@@ -5,7 +5,7 @@ Project completed for Erdos institute data science bootcamp (fall-2025)
 ### Team members
 1. [Cami Goray]
 2. [Hana Lang](https://github.com/hlang-3304)
-3. [Ranadeep Roy]
+3. [Ranadeep Roy](https://github.com/ranadeep83)
 
 
 ## Project overview
@@ -19,7 +19,7 @@ The dataset was split into training and testing sets, with 20% of the data set a
 
 ## Results
 1. Hyperparameter-tuned logistic regression model produced the best mean AUC score in the training stage, with an average ROC-AUC score of 0.7621 across the five outer folds of the nested cross-validation.
-2. On the final test set we obtained an ROC-AUC score of 0.7278 on the validation set using the Logistic Regression with penalty and the best hyperparameters found in the training stage.
+2. On the final test set we obtained an ROC-AUC score of 0.7278 on the validation set using the Logistic Regression with penalty and the best hyperparameters found in the training stage. The corresponding confusion matrix is shown below :
 ![county-wide heat map](model_comparison/final_model_cm.png)
 4. Feature importance analysis based on permutation importance methods indicates that the most important features of a school were: 
     -   (a) school district of NYC Department of Education
@@ -27,9 +27,8 @@ The dataset was split into training and testing sets, with 20% of the data set a
     -   (c) the proportion of Hispanic students 
     -   (d) a city location of Staten Island 
     -   (e) a city location of Brooklyn. 
-
+![feature_importance](model_comparison/final-modelpermutation_importance.png)
 Based on EDA, we had expected geographical features to appear as important predictors (see the county-wide heat map displaying the proportion of schools with target variable 
-
 ![county-wide heat map](eda_and_images/county_map.png)
 
 ## Conclusion and future directions
