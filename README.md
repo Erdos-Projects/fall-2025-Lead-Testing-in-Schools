@@ -12,7 +12,7 @@ Project completed for Erdos institute data science bootcamp (fall-2025)
 We have developed a comprehensive analysis to predict the presence of lead contamination in New York school drinking water using a rich dataset of demographic, socioeconomic, infrastructural and geographic features. 
 
 ## Motivation and problem statement
-Lead is a toxic metal that can cause health problems, especially in children. According to the CDC, “there is no safe blood lead level that has been identified for young children.” The EPA has “set the maximum contaminant level goal for lead in drinking water at zero because even small amounts can affect memory, behavior and learning ability. Unfortunately, a 2024 study from Cornell University found that 47% of schools had at least one outlet that tested above 15 ppb.
+Lead is a toxic metal that can cause health problems, especially in children. According to the CDC, “there is no safe blood lead level that has been identified for young children.” The EPA has set the maximum contaminant level goal for lead in drinking water at zero because even small amounts can affect memory, behavior and learning ability. Unfortunately, a 2024 study from Cornell University found that 47% of schools had at least one outlet that tested above 15 ppb.
 
 Since, any amount of lead exposure is unsafe to children, in this project we seek to answer the following question : "Can we predict whether a school has lead contaminated drinking water?"
 
@@ -53,4 +53,4 @@ Based on EDA, we had expected geographical features to appear as important predi
 ## Folder organization
 1. data : This folder contains the main dataset "Lead_Testing_in_Schools.csv" obtained from [New York department of health website](https://health.data.ny.gov/Health/Lead-Testing-in-School-Drinking-Water-Sampling-and/rygk-rhum/about_data). It also contains a script "scraping_all_schools.ipynb" to scrap socio-economic and demographics data from [nces website](https://nces.ed.gov/ccd/schoolsearch/ ) and other datasets obtained from [NYC government site](https://a816-dohbesp.nyc.gov/IndicatorPublic/data-explorer/lead/?id=16#display=summary). The final dataset used for modeling is "lead_data_expanded.csv" which can be generated using "combine_csv.ipynb"
 2. eda_and_images : This folder conains python notebooks to perform exploratory data analysis on the data.
-3. model_comparison : This folder contains scripts for performing model evaluation and testing the final model. It also contains the executive summary and rpesentation pdfs.
+3. model_comparison : This folder contains scripts for performing model evaluation and testing the final model.
