@@ -11,7 +11,10 @@ Project completed for Erdos institute data science bootcamp (fall-2025)
 ## Project overview
 We have developed a comprehensive analysis to predict the presence of lead contamination in New York school drinking water using a rich dataset of demographic, socioeconomic, infrastructural and geographic features. 
 
-## Problem statement
+## Motivation and problem statement
+Lead is a toxic metal that can cause health problems, especially in children. According to the CDC, “there is no safe blood lead level that has been identified for young children.” The EPA has “set the maximum contaminant level goal for lead in drinking water at zero because even small amounts can affect memory, behavior and learning ability. Unfortunately, a2024 study from Cornell University found that 47% of schools had at least one outlet that tested above 15 ppb.
+
+Since, any amount of lead exposure is unsafe to children, in this project we seek to answer the following question : "Can we predict whether a school has lead contaminated drinking water?"
 
 ## Stakeholders
 Our primary stakeholders are education administrators in the State of New York, as well as the NY State Department of Health, New York Schools, and NY parents and families of schoolchildren, as this project aims to predict lead contamination and therefore improve safety of school facilities. 
